@@ -18,6 +18,7 @@ package com.example.android.pets;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -81,12 +82,15 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void insertPet(){
 
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         String nameText = mNameEditText.getText().toString().trim();
         String breedText = mBreedEditText.getText().toString().trim();
         int gender = mGender;
         int weight = Integer.parseInt(mWeightEditText.getText().toString().trim());
+        if(1000 <= weight || weight == 0 ) {
+            Toast toast = Toast.makeText(this, R.string.mirzapur_dialogue, Toast.LENGTH_LONG);
+            toast.show();
+            return ;
+        }
 
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, nameText);
@@ -94,22 +98,22 @@ public class EditorActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_GENDER, gender);
         values.put(PetEntry.COLUMN_PET_WEIGHT, weight);
 
-        //Insert The New Row , returning the Primary Key value of The new row
-        long newRowId = db.insert(PetEntry.TABLE_NAME, null , values );
+        Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI  , values);
 
+        // Show a toast message depending on whether or not the insertion was successful
+        if (newUri == null) {
+            // If the new content URI is null, then there was an error with insertion.
+            Toast.makeText(this, getString(R.string.editor_insert_pet_failed),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            // Otherwise, the insertion was successful and we can display a toast.
+            Toast.makeText(this, getString(R.string.editor_insert_pet_successful),
+                    Toast.LENGTH_SHORT).show();
+        }
 
         Intent intent = new Intent(EditorActivity.this, CatalogActivity.class);
         startActivity(intent);
-
-        if(newRowId == -1){
-            Toast toast = Toast.makeText(this, "ERROR SAVING PET ", Toast.LENGTH_SHORT);
-            toast.show();
-        }else{
-            Toast toast = Toast.makeText(this, "new pet has been added to shelter with id: " + newRowId, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
-
     }
 
 

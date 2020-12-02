@@ -15,10 +15,12 @@
  */
 package com.example.android.pets;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.pets.data.PetContract.PetEntry;
 import com.example.android.pets.data.PetDbHelper;
@@ -72,20 +75,18 @@ public class CatalogActivity extends AppCompatActivity {
      * the pets database.
      */
     private void displayDatabaseInfo() {
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-        //mDbHelper = new PetDbHelper(this);
-
-        // Create and/or open a database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         String[] projection = { PetEntry._ID, PetEntry.COLUMN_PET_NAME,PetEntry.COLUMN_PET_BREED,
                 PetEntry.COLUMN_PET_GENDER,
                 PetEntry.COLUMN_PET_WEIGHT };
 
-        Cursor cursor = db.query(PetEntry.TABLE_NAME, projection,
-                null, null,
-                null, null, null);
+        Cursor cursor = getContentResolver().query(
+                 PetEntry.CONTENT_URI,
+                 projection,
+                null,
+                null,
+                null);
+
         TextView displayView = (TextView) findViewById(R.id.text_view_pet);
 
         try {
@@ -124,13 +125,7 @@ public class CatalogActivity extends AppCompatActivity {
                 displayView.append(("\n" + currentID + " - " +
                         currentName + " - " + currentBreed + " - " + currentGender
                         + " - " + currentWeight));
-//                displayView.append("\n" +
-//                        cursor.getString(cursor.getColumnIndex(PetEntry._ID)) + "\t" +
-//                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_NAME)) + "\t" +
-//                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_BREED)) + "\t" +
-//                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_GENDER)) + "\t" +
-//                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_WEIGHT))
-//                );
+
             }
         } finally {
             // Always close the cursor when you're done reading from it. This releases all its
@@ -153,8 +148,6 @@ public class CatalogActivity extends AppCompatActivity {
      * Helper method to insert hardcoded pet data into the database. For debugging purposes only.
      */
     private void insertPet() {
-        // TODO: Insert a single pet into the database
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         //Create a new map of values , where coloumn Name are Keys
         ContentValues values = new ContentValues();
@@ -163,8 +156,23 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_MALE);
         values.put(PetEntry.COLUMN_PET_WEIGHT, 7);
 
+        // Insert a new row for Toto into the provider using the ContentResolver.
+        // Use the {@link PetEntry#CONTENT_URI} to indicate that we want to insert
+        // into the pets database table.
+        // Receive the new content URI that will allow us to access Toto's data in the future.
         //Insert The New Row , returning the Primary Key value of The new row
-        long newRowId = db.insert(PetEntry.TABLE_NAME, null , values );
+        Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI  , values);
+
+        if (newUri == null) {
+            // If the new content URI is null, then there was an error with insertion.
+            Toast.makeText(this, getString(R.string.editor_insert_pet_failed),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            // Otherwise, the insertion was successful and we can display a toast.
+            Toast.makeText(this, getString(R.string.editor_insert_pet_successful),
+                    Toast.LENGTH_SHORT).show();
+        }
 
         displayDatabaseInfo();
     }
