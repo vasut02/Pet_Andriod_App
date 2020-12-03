@@ -17,7 +17,6 @@ package com.example.android.pets;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -41,6 +40,7 @@ import com.example.android.pets.data.PetDbHelper;
 public class EditorActivity extends AppCompatActivity {
     /** Inisialze dtabase helper */
     private PetDbHelper mDbHelper;
+
     /** EditText field to enter the pet's name */
     private EditText mNameEditText;
 
@@ -85,12 +85,12 @@ public class EditorActivity extends AppCompatActivity {
         String nameText = mNameEditText.getText().toString().trim();
         String breedText = mBreedEditText.getText().toString().trim();
         int gender = mGender;
-        int weight = Integer.parseInt(mWeightEditText.getText().toString().trim());
-        if(1000 <= weight || weight == 0 ) {
-            Toast toast = Toast.makeText(this, R.string.mirzapur_dialogue, Toast.LENGTH_LONG);
-            toast.show();
-            return ;
+        if ( mWeightEditText.getText().toString().equals("") ){
+            Toast.makeText(this, R.string.Provide_correct_weight,
+                    Toast.LENGTH_SHORT).show();
+            return;
         }
+        int weight = Integer.parseInt(mWeightEditText.getText().toString().trim());
 
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, nameText);
@@ -143,7 +143,7 @@ public class EditorActivity extends AppCompatActivity {
                     } else if (selection.equals(getString(R.string.gender_female))) {
                         mGender = PetEntry.GENDER_FEMALE; // Female
                     } else {
-                        mGender = PetEntry.GENDER_UNKONOWN; // Unknown
+                        mGender = PetEntry.GENDER_UNKNOWN; // Unknown
                     }
                 }
             }
@@ -184,4 +184,5 @@ public class EditorActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

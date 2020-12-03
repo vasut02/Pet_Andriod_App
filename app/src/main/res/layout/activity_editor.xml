@@ -46,12 +46,28 @@
                 android:inputType="textCapWords"
                 style="@style/EditorFieldStyle" />
 
+            <TextView
+                android:id="@+id/Name_Error_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/insert_pet_s_name"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone" />
+
             <!-- Breed field -->
             <EditText
                 android:id="@+id/edit_pet_breed"
                 android:hint="@string/hint_pet_breed"
                 android:inputType="textCapWords"
                 style="@style/EditorFieldStyle" />
+
+            <TextView
+                android:id="@+id/Breed_Error_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/insert_pets_s_breed"
+                android:textColor="@android:color/holo_red_dark" />
         </LinearLayout>
     </LinearLayout>
 
@@ -115,6 +131,20 @@
                 android:id="@+id/label_weight_units"
                 style="@style/EditorUnitsStyle"
                 android:text="@string/unit_pet_weight" />
+
         </RelativeLayout>
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/Weight_Error_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginLeft="134dp"
+        android:text="@string/insert_pet_s_weight"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_marginStart="134dp" />
+
+
 </LinearLayout>

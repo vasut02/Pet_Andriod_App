@@ -66,4 +66,14 @@
     <string name="editor_insert_pet_failed">Error with saving pet</string>
 
     <string name="mirzapur_dialogue">\" Yahi Patak Kai Chod Denge \n Chal Nikal MADARCHOD!\"</string>
+    <string name="insert_pet_s_name">Insert Pet\'s Name</string>
+    <string name="insert_pets_s_breed">Insert Pet\'s Breed</string>
+    <string name="insert_pet_s_weight">Insert Pet\'s Weight Correctlly</string>
+    <string name="Provide_correct_weight"> Please Provide All Information Correctly </string>
+
+    <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
+    <string name="empty_view_title_text">It\'s a bit lonely here…</string>
+
+    <!-- Subtitle text for the empty view that prompts the user to add a pet [CHAR LIMIT=50] -->
+    <string name="empty_view_subtitle_text">Get started by adding a pet</string>
 </resources>
